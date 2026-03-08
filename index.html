@@ -3,88 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Love</title>
+    <title>Together Forever</title>
     <style>
+        :root {
+            --primary-color: #ff4d6d;
+            --bg-color: #fff0f3;
+        }
+
         body {
             margin: 0;
-            padding: 0;
-            background: #ffdef2; /* لون بينك هادي */
-            font-family: 'Arial', sans-serif;
-            overflow-x: hidden;
+            background-color: var(--bg-color);
+            font-family: 'Cairo', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            color: #d63384;
-        }
-
-        h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px white; }
-
-        /* العداد */
-        #timer {
-            display: flex;
-            gap: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.6);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .time-box { text-align: center; }
-        .time-box span { display: block; font-size: 2rem; color: #ff4d6d; }
-
-        /* تأثير القلوب المتساقطة */
-        .heart {
-            position: fixed;
-            top: -10px;
-            font-size: 20px;
-            user-select: none;
-            z-index: 1000;
-            animation: fall linear forwards;
-        }
-        @keyframes fall {
-            to { transform: translateY(100vh); }
-        }
-
-        /* صورة في النص */
-        .photo-frame {
-            width: 200px;
-            height: 200px;
-            border: 8px solid white;
-            border-radius: 50%;
             overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-align: center;
         }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* القلب الكبير النابض */
+        .main-heart {
+            font-size: 80px;
+            color: var(--primary-color);
+            animation: pulse 1.2s infinite;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            color: #590d22;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        /* تصميم العداد زي الفيديو */
+        .countdown-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .time-box {
+            background: white;
+            padding: 15px 5px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+            border: 1px solid #ffb3c1;
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .time-box label {
+            font-size: 12px;
+            color: #800f2f;
+        }
+
+        /* القلوب المتساقطة */
+        .floating-heart {
+            position: fixed;
+            top: -10%;
+            font-size: 20px;
+            animation: fall linear forwards;
+            z-index: -1;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* رسالة سفلية */
+        .footer-msg {
+            margin-top: 40px;
+            font-size: 18px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <div class="photo-frame">
-        <img src="https://via.placeholder.com/200" alt="Our Photo">
+    <div class="main-heart">❤️</div>
+    <h1>كل ثانية وأنتِ معايا ❤️</h1>
+
+    <div class="countdown-container">
+        <div class="time-box"><span id="days">0</span><label>يوم</label></div>
+        <div class="time-box"><span id="hours">0</span><label>ساعة</label></div>
+        <div class="time-box"><span id="minutes">0</span><label>دقيقة</label></div>
+        <div class="time-box"><span id="seconds">0</span><label>ثانية</label></div>
     </div>
 
-    <h1>منذ أول يوم لنا ❤️</h1>
+    <div class="footer-msg">مشوارنا بدأ ومازال مستمر...</div>
 
-    <div id="timer">
-        <div class="time-box"><span id="days">0</span> يوم</div>
-        <div class="time-box"><span id="hours">0</span> ساعة</div>
-        <div class="time-box"><span id="minutes">0</span> دقيقة</div>
-        <div class="time-box"><span id="seconds">0</span> ثانية</div>
-    </div>
-
-    <audio id="bgMusic" loop>
+    <audio id="music" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // 1. حساب الوقت (اكتب هنا تاريخ البداية)
+        // حط تاريخ البداية هنا
         const startDate = new Date("March 1, 2024 00:00:00").getTime();
 
-        function updateTimer() {
+        function update() {
             const now = new Date().getTime();
             const diff = now - startDate;
 
@@ -93,25 +126,25 @@
             document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000);
         }
-        setInterval(updateTimer, 1000);
+        setInterval(update, 1000);
 
-        // 2. عمل القلوب المتساقطة
         function createHeart() {
             const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerText = '❤️';
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            heart.style.opacity = Math.random();
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
             document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
+            setTimeout(() => heart.remove(), 6000);
         }
-        setInterval(createHeart, 300);
+        setInterval(createHeart, 400);
 
-        // 3. تشغيل الموسيقى (بسبب سياسة المتصفح لازم المستخدم يدوس في أي مكان عشان الصوت يشتغل)
-        document.body.onclick = function() {
-            document.getElementById("bgMusic").play();
-        }
+        // تشغيل الموسيقى لما تدوس على القلب
+        document.querySelector('.main-heart').onclick = function() {
+            document.getElementById("music").play();
+            alert("الموسيقى اشتغلت! ❤️");
+        };
     </script>
 </body>
 </html>
