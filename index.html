@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #ffdef2; /* لون بينك هادي */
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #d63384;
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px white; }
+
+        /* العداد */
+        #timer {
+            display: flex;
+            gap: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .time-box { text-align: center; }
+        .time-box span { display: block; font-size: 2rem; color: #ff4d6d; }
+
+        /* تأثير القلوب المتساقطة */
+        .heart {
+            position: fixed;
+            top: -10px;
+            font-size: 20px;
+            user-select: none;
+            z-index: 1000;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+
+        /* صورة في النص */
+        .photo-frame {
+            width: 200px;
+            height: 200px;
+            border: 8px solid white;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+    <div class="photo-frame">
+        <img src="https://via.placeholder.com/200" alt="Our Photo">
+    </div>
+
+    <h1>منذ أول يوم لنا ❤️</h1>
+
+    <div id="timer">
+        <div class="time-box"><span id="days">0</span> يوم</div>
+        <div class="time-box"><span id="hours">0</span> ساعة</div>
+        <div class="time-box"><span id="minutes">0</span> دقيقة</div>
+        <div class="time-box"><span id="seconds">0</span> ثانية</div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 1. حساب الوقت (اكتب هنا تاريخ البداية)
+        const startDate = new Date("March 1, 2024 00:00:00").getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = now - startDate;
+
+            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000);
+        }
+        setInterval(updateTimer, 1000);
+
+        // 2. عمل القلوب المتساقطة
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            heart.style.opacity = Math.random();
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 300);
+
+        // 3. تشغيل الموسيقى (بسبب سياسة المتصفح لازم المستخدم يدوس في أي مكان عشان الصوت يشتغل)
+        document.body.onclick = function() {
+            document.getElementById("bgMusic").play();
+        }
+    </script>
+</body>
+</html>
